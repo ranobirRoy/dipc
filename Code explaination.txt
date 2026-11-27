@@ -1,0 +1,125 @@
+# Google Colab-এ ছবি দেখানোর জন্য বিশেষ ফাংশন আনা হয়েছে
+from google.colab.patches import cv2_imshow
+
+# ইমেজ প্রসেসিংয়ের জন্য OpenCV লাইব্রেরি যুক্ত করা হয়েছে
+import cv2
+
+# ছবিটি গ্রেস্কেল (সাদা-কালো) মোডে লোড করা হচ্ছে (মান ০ থেকে ২৫৫)
+img = cv2.imread('lena (2).jpg', cv2.IMREAD_GRAYSCALE)
+
+# পরিবর্তনের আগের বার্তা প্রিন্ট করা হচ্ছে
+print("Before conversion.")
+
+# আসল গ্রেস্কেল ছবিটি দেখানো হচ্ছে
+cv2_imshow(img)
+
+
+# এই কমেন্ট করা লাইনগুলো কোড রান করলে কাজ করবে না
+# print(img.max())
+# print(img.min())
+
+# রূপান্তরের পরের ধাপ বোঝাতে বার্তা প্রিন্ট করা হচ্ছে
+print("After conversion.\n")
+
+# ছবির সাইজ দেখার কমেন্ট করা লাইন (কাজ করবে না)
+#print(img.shape)
+
+# ছবির প্রতিটি সারি (i) ধরে লুপ চালানো হচ্ছে
+for i in range(img.shape[0]):
+    # ছবির প্রতিটি কলাম (j) ধরে লুপ চালানো হচ্ছে (সব পিক্সেল ধরার জন্য)
+    for j in range(img.shape[1]):
+        # (i, j) পিক্সেলের বর্তমান মান a-তে নেওয়া হচ্ছে
+        a = img.item(i,j)
+        # পিক্সেলের মান ২৫৫ থেকে বিয়োগ করে রঙ উল্টে (negative) দেওয়া হচ্ছে
+        img[i, j] = 255-a
+
+# সব পিক্সেল উল্টে যাওয়ার পর নতুন নেগেটিভ ছবিটি দেখানো হচ্ছে
+cv2_imshow(img)
+
+=======================================
+
+# Google Colab-এ ছবি দেখানোর জন্য বিশেষ ফাংশন আনা হয়েছে
+from google.colab.patches import cv2_imshow
+
+# ইমেজ প্রসেসিংয়ের জন্য OpenCV লাইব্রেরি যুক্ত করা হয়েছে
+import cv2
+
+# লগারিদম (log2) হিসাব করার জন্য পাইথনের math মডিউল আনা হয়েছে
+import math
+
+# পিক্সেল অ্যারের সর্বোচ্চ মান বের করার জন্য NumPy যুক্ত করা হয়েছে
+import numpy as np
+
+# ছবির সঠিক ফাইলের নাম ঠিক রাখা হয়েছে
+# Corrected the filename to match the file in workspace: 'lena (2).jpg'
+img = cv2.imread('lena (2).jpg', cv2.IMREAD_GRAYSCALE)
+
+# ছবি ঠিকমতো লোড হয়েছে কি না তা যাচাই করা হচ্ছে
+if img is None:
+    # ছবি না পেলে এরর মেসেজ দেখানো হবে
+    print("Error: Image not found. Please check the file path.")
+else:
+    # লগারিদমিক রূপান্তরের সূত্র: s = c * log(1 + r)
+    # Logarithmic transformation: s = c * log(1 + r)
+    # স্কেলিং ফ্যাক্টর c বের করার সূত্র
+    # c = 255 / log(1 + max_val)
+    
+    # ছবির সবচেয়ে বড় (সবচেয়ে উজ্জ্বল) পিক্সেল মান বের করা হচ্ছে
+    max_val = np.max(img)
+    
+    # মান যেন ০ থেকে ২৫৫-এর মধ্যে থাকে, সেজন্য c হিসাব করা হচ্ছে (max_val > 0 না হলে ১ ধরা হয়েছে)
+    c = 255 / math.log2(1 + max_val) if max_val > 0 else 1
+
+    # ছবির প্রতিটি সারি (i) ধরে লুপ চালানো হচ্ছে
+    for i in range(img.shape[0]):
+        # ছবির প্রতিটি কলাম (j) ধরে লুপ চালানো হচ্ছে (সব পিক্সেল ধরার জন্য)
+        for j in range(img.shape[1]):
+            # (i, j) পিক্সেলের বর্তমান মান r-তে নেওয়া হচ্ছে
+            r = img.item(i, j)
+            # লগারিদমিক সূত্র দিয়ে নতুন মান হিসাব করে পূর্ণসংখ্যায় (int) রূপান্তর করে পিক্সেলে বসানো হচ্ছে
+            img[i, j] = int(c * math.log2(1 + r))
+
+    # রূপান্তরিত নতুন ছবিটি পর্দায় দেখানো হচ্ছে
+    cv2_imshow(img)
+
+=================================================
+
+# Google Colab-এ ছবি দেখানোর জন্য বিশেষ ফাংশন আনা হয়েছে
+from google.colab.patches import cv2_imshow
+
+# ইমেজ প্রসেসিংয়ের জন্য OpenCV লাইব্রেরি যুক্ত করা হয়েছে
+import cv2
+
+# কার্নেল (ম্যাট্রিক্স) তৈরির জন্য NumPy যুক্ত করা হয়েছে
+import numpy as np
+
+# ছবির সঠিক ফাইলের নাম ধরে গ্রেস্কেল (0 মানে সাদা-কালো) মোডে লোড করা হচ্ছে
+# Corrected the path to load from the current directory 'lena (2).jpg'
+img = cv2.imread('lena (2).jpg', 0)
+
+# ৫x৫ সাইজের একটি ফিল্টার/কার্নেল তৈরি করা হচ্ছে, যার সব মান ১ এবং ডেটা টাইপ uint8 (০-২৫৫)
+kernel = np.ones((5,5), np.uint8)
+
+# Erosion: ছবির উজ্জ্বল/সাদা অংশ কিছুটা ক্ষয় বা ছোট করা হচ্ছে (ছোট সাদা নয়েজ দূর করতে সাহায্য করে)
+erosion = cv2.erode(img, kernel, iterations=1)
+
+# Dialation (Dilation): ছবির উজ্জ্বল/সাদা অংশ কিছুটা বাড়ানো বা বড় করা হচ্ছে (ছোট কালো গর্ত ভরতে সাহায্য করে)
+dialation = cv2.dilate(img, kernel, iterations=1)
+
+# Opening: আগে erosion করে পরে dilate করা হচ্ছে (ছবির বাইরের ছোট সাদা নয়েজ সরাতে ব্যবহৃত হয়)
+opening = cv2.dilate(erosion, kernel, iterations=1)
+
+# Closing: আগে dilate করে পরে erode করা হচ্ছে (ছবির ভেতরের ছোট কালো ফাঁকা বা ছিদ্র বন্ধ করতে ব্যবহৃত হয়)
+closing = cv2.erode(dialation, kernel, iterations=1)
+
+# আসল ছবির হেডিং প্রিন্ট করে ছবিটি দেখানো হচ্ছে
+print("Original Image:")
+cv2_imshow(img)
+
+# Opening করা ছবিটি দেখানো হচ্ছে
+print("Opening:")
+cv2_imshow(opening)
+
+# Closing করা ছবিটি দেখানো হচ্ছে
+print("Closing:")
+cv2_imshow(closing)
